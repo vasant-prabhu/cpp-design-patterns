@@ -11,7 +11,13 @@ class Logger
    {}
    ~Logger()
    {}
-   Logger(Logger const &){}
+   //Also make copy constructor and assignment operator for this class 
+   //private
+   
+   Logger(Logger const&){}
+   
+   Logger& operator=(Logger const&){}
+      
    public:
    static Logger* useInstance();
    void openLogFile();
