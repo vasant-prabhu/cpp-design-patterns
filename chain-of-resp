@@ -1,0 +1,107 @@
+//chain of responsibility - bill reimbursement corporate system
+#include<iostream>
+#include<conio.h>
+using namespace std;
+
+class BillTracker
+{
+	int billAmt;
+	public:
+	BillTracker(int input)
+	{
+	billAmt = input;
+	}
+	int getBillAmt(){return billAmt;}
+};
+
+class billApproverChain
+{
+public:
+virtual void setNext(billApproverChain*)=0;
+virtual void billProcessor(BillTracker*)=0;
+};
+
+class NormalSupervisor : public billApproverChain
+{
+billApproverChain* sup;
+public:
+	virtual void setNext(billApproverChain* bac)
+	{
+	 	 sup = bac;
+	}
+	
+	virtual void billProcessor(BillTracker* bt)
+	{
+	 	 if (bt->getBillAmt() < 10)
+	 	 {
+		  	cout<<"Bill processed by NormalSupervisor"<<endl;	  
+	     }
+	     else
+	     {
+		  	 sup->billProcessor(bt);	 
+		 }
+	}
+
+};
+
+class SeniorSupervisor : public billApproverChain
+{
+	billApproverChain* sup;
+	public:
+	virtual void setNext(billApproverChain* bac)
+	{
+	 	 sup = bac;
+	}
+	
+	virtual void billProcessor(BillTracker* bt)
+	{
+	 	 if (bt->getBillAmt() < 100)
+	 	 {
+		  	cout<<"Bill processed by SeniorSupervisor"<<endl;	  
+	     }
+	     else
+	     {
+		  	 sup->billProcessor(bt);	 
+		 }
+	}
+
+};
+
+class PrincipalSupervisor : public billApproverChain
+{
+	billApproverChain* sup;
+	public:
+	virtual void setNext(billApproverChain* bac)
+	{
+	 	 sup = bac;
+	}
+	
+	virtual void billProcessor(BillTracker* bt)
+	{
+	 	 if (bt->getBillAmt() < 1000)
+	 	 {
+		  	cout<<"Bill processed by PrincipalSupervisor"<<endl;	  
+	     }
+	     else
+	     {
+		  	 cout<<"This amount cant be processed by any supervisor - contact VP- department"<<endl;	 
+		 }
+	}
+
+};
+
+int main()
+{
+BillTracker *objBT = new BillTracker(335);
+NormalSupervisor* ns = new NormalSupervisor();
+SeniorSupervisor* ss = new SeniorSupervisor();
+PrincipalSupervisor* ps = new PrincipalSupervisor();
+
+//building the chain of responsibility
+ns->setNext(ss);
+ss->setNext(ps);
+
+ns->billProcessor(objBT);
+
+return 0;
+}
