@@ -1,0 +1,93 @@
+//bridge design pattern
+#include<iostream>
+#include<conio.h>
+#include<string>
+using namespace std;
+
+class ISwitch
+{
+public:
+virtual void switchOn()=0;
+virtual void switchOff()=0;
+};
+
+class IEquipment
+{
+public:
+virtual void deviceOn()=0;
+virtual void deviceOff()=0;
+virtual string name()=0;
+
+
+};
+
+class mySwitch:public ISwitch
+{
+IEquipment& eqp;
+public:
+mySwitch(IEquipment& ipEqp):eqp(ipEqp){}
+~mySwitch(){}
+
+void switchOn()
+{
+    eqp.deviceOn();
+}
+
+void switchOff()
+{
+    eqp.deviceOff();
+}
+
+
+void setEquipment(IEquipment& opeqp)
+{
+    cout<<"setting..."<<endl;
+    eqp = opeqp;
+    cout<<opeqp.name()<<endl;
+    cout<<eqp.name()<<endl;
+}
+
+};
+
+class Geyser : public IEquipment
+{
+string brand = "racold";
+public:
+string name(){return brand;}
+void deviceOn(){cout<<"turn on the geyser"<<endl;} 
+void deviceOff(){cout<<"turn off the geyser"<<endl;}
+
+};
+
+
+class AC : public IEquipment
+{
+string brand = "tata voltas";
+public:
+string name(){return brand;}
+void deviceOn(){cout<<"turn on the ac"<<endl;} 
+void deviceOff(){cout<<"turn off the ac"<<endl;}
+};
+
+
+int main()
+{
+   Geyser g1;
+   mySwitch sw(g1);
+
+   sw.switchOn(); 
+   cout<<endl;
+   sw.switchOff();
+   cout<<endl;
+   
+   AC myAC;
+   mySwitch sw2(myAC);
+   //sw2.setEquipment(myAC); 
+   sw2.switchOn();
+   cout<<endl;
+   sw2.switchOff();
+   cout<<endl;
+  
+   return 0;
+}
+
